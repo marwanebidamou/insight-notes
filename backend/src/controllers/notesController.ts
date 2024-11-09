@@ -4,8 +4,24 @@ import Note, { INote, NoteStatus } from '../models/Note';
 // Get all notes
 export const getNotes = async (req: Request, res: Response) => {
     try {
-        const notes: INote[] = await Note.find();
-        res.json(notes);
+
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+        const skip = (page - 1) * limit;
+
+        const notes: INote[] = await Note.find()
+            .skip(skip)
+            .limit(limit);
+
+
+        const total = await Note.countDocuments();
+
+        res.json({
+            notes,
+            total,
+            page,
+            pages: Math.ceil(total / limit)
+        });
     } catch (error) {
         res.status(500).json({ message: error });
     }
