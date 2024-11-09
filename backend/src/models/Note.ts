@@ -5,9 +5,18 @@ export interface INote extends Document {
     title: string;
     content: string;
     summary?: string;
+    status: NoteStatus;
     createdAt: Date;
     updatedAt: Date;
 }
+
+export enum NoteStatus {
+    NotStarted = "Not Started",
+    InProgress = "In Progress",
+    Completed = "Completed",
+    Archived = "Archived"
+}
+
 
 // Create the schema with type definitions and default values
 const NoteSchema: Schema = new Schema({
@@ -23,6 +32,12 @@ const NoteSchema: Schema = new Schema({
         type: String,
         default: '',
     },
+    status: {
+        type: String,
+        enum: Object.values(NoteStatus),
+        default: NoteStatus.NotStarted,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now,
@@ -35,3 +50,4 @@ const NoteSchema: Schema = new Schema({
 
 // Export the Mongoose model based on the schema and interface
 export default mongoose.model<INote>('Note', NoteSchema);
+
