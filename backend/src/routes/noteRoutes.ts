@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getNotes, createNote, updateNote, deleteNote, changeNoteStatus } from '../controllers/notesController';
+import { getNotes, createNote, updateNote, deleteNote, changeNoteStatus, summarizeNote } from '../controllers/notesController';
 
 const router = Router();
 
@@ -17,5 +17,8 @@ router.delete('/:id', deleteNote);
 
 // Route to update a note status by ID
 router.patch('/:id/status', changeNoteStatus);
+
+// Route to summarize a note by ID
+router.post('/:id/summarize', summarizeNote);
 
 export default router;

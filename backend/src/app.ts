@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import notesRoutes from './routes/noteRoutes';
+import dotenv from 'dotenv';
 
 const app: Application = express();
 

@@ -1,5 +1,9 @@
 import { Request, Response } from 'express';
 import Note, { INote, NoteStatus } from '../models/Note';
+import AiService from '../services/AiGenerationService';
+import { OPENAI_API_KEY } from '../config/env';
+
+const aiService = new AiService(OPENAI_API_KEY || '');
 
 // Get all notes
 export const getNotes = async (req: Request, res: Response) => {
@@ -87,5 +91,26 @@ export const changeNoteStatus = async (req: Request, res: Response) => {
         res.json(updatedNote);
     } catch (error) {
         res.status(500).json({ error });
+    }
+};
+
+
+// Summarize a note by ID
+export const summarizeNote = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    try {
+        const note = await Note.findById(id);
+        if (!note) {
+            res.status(404).json({ message: 'Note not found' });
+            return;
+        }
+        const summary = await aiService.summarizeText(note.title + " " + note.content);
+        note.summary = summary;
+        await note.save();
+        res.json(note);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ error });
     }
 };
