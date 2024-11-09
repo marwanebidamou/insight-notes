@@ -3,7 +3,6 @@ class AiService {
     private apiKey: String;
 
     constructor(apiKey: string) {
-        console.log("APIKEY==", apiKey);
         this.apiKey = apiKey;
     }
 
